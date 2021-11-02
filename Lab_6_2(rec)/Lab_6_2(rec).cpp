@@ -14,9 +14,9 @@ using std::cin;
 using std::endl;
 using std::setw;
 
-void CreateArray(int *z, const int size, const int LeftLimit, const int RightLimit, int &FaultCheck, const int i);
+void CreateArray(int *z, const int size, const int LeftLimit, const int RightLimit, const int i);
 void PrintArray(int *z, const int size, const int i);
-void ArithmeticMean(int *z, const int size, double S, const int i);
+void ArithmeticMean(int *z, const int size, double S, double &ArMean, const int i);
 
 int main()
 {
@@ -25,46 +25,38 @@ int main()
 	int n;
 	int A;
 	int B;
-	int t = 0; // fault check
+	double z = 0;
 
 	cout << "How many elements should a new array consist of?\n";
 	cout << "n = "; cin >> n;
-	cout << endl << "What interval should RNG's results be generated from? (i.e. define [A;B], where A and B are both integers, A < B)\n";
+	cout << endl << "What interval should RNG's results satisfy? (i.e. define [A;B], where A and B are both integers, A < B)\n";
 	cout << "A = "; cin >> A;
 	cout << "B = "; cin >> B;
 
 	int *a = new int[n];
 
-	CreateArray(a, n, A, B, t, 0);
-	if (t == 1)
-	{
-		PrintArray(a, n, 0);
-		ArithmeticMean(a, n, 0, 0);
-	}
+	CreateArray(a, n, A, B, 0);
+	PrintArray(a, n, 0);
+	ArithmeticMean(a, n, 0, z, 0);
+
+	cout << "The arithmetic mean = " << setw(5) << z;
 
 	delete[] a;
 	return 0;
 }
 
-void CreateArray(int *z, const int size, const int LeftLimit, const int RightLimit, int &FaultCheck, const int i)
+void CreateArray(int *z, const int size, const int LeftLimit, const int RightLimit, const int i)
 {
-	if (LeftLimit >= RightLimit)
-		cerr << "Unable to proceed: either A > B or A = B";
-	else
+	if (i < size)
 	{
-		if (i < size)
+		int t = LeftLimit + rand() % (RightLimit - LeftLimit + 1);
+		if (t % 2 == 0)
 		{
-			int t = LeftLimit + rand() % (RightLimit - LeftLimit + 1);
-			if (t % 2 == 0)
-			{
-				z[i] = t;
-				CreateArray(z, size, LeftLimit, RightLimit, FaultCheck, i + 1);
-			}
-			else
-				CreateArray(z, size, LeftLimit, RightLimit, FaultCheck, i);
+			z[i] = t;
+			CreateArray(z, size, LeftLimit, RightLimit, i + 1);
 		}
 		else
-			FaultCheck++;
+			CreateArray(z, size, LeftLimit, RightLimit, i);
 	}
 }
 
@@ -84,14 +76,13 @@ void PrintArray(int *z, const int size, const int i)
 		cout << " }\n";
 }
 
-void ArithmeticMean(int *z, const int size, double S, const int i)
+void ArithmeticMean(int *z, const int size, double S, double &ArMean, const int i)
 {
-	
-	if (i < size)
+	S += z[i];
+	if (i < size - 1)
 	{
-		S += z[i];
-		ArithmeticMean(z, size, S, i + 1);
+		ArithmeticMean(z, size, S, ArMean, i + 1);
 	}
 	else
-		cout << endl << "The arithmetic mean is:" << setw(5) << S / size << endl;
+		ArMean = S / size;
 }

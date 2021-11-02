@@ -15,9 +15,11 @@ namespace UnitTest62rec
 			int t = 0;
 			const int n = 1;
 			int a[n];
+			a[0] = 3;
+			double y;
 
-			CreateArray(a, n, -17, -17, t, 0);
-			Assert::AreEqual(t, 0);
+			ArithmeticMean(a, n, 0, y, 0);
+			Assert::AreEqual(y, 3.);
 		}
 	};
 }
