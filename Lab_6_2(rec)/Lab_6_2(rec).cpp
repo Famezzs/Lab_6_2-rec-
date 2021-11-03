@@ -16,7 +16,7 @@ using std::setw;
 
 void CreateArray(int *z, const int size, const int LeftLimit, const int RightLimit, const int i);
 void PrintArray(int *z, const int size, const int i);
-void ArithmeticMean(int *z, const int size, double S, double &ArMean, const int i);
+void ArithmeticMean(int *z, const int size, double S, double &ArMean, const int i, const int n);
 
 int main()
 {
@@ -29,17 +29,30 @@ int main()
 
 	cout << "How many elements should a new array consist of?\n";
 	cout << "n = "; cin >> n;
+	
+	if (n <= 0)
+	{
+		std::cerr << "Number of elements in an array should be > 0";
+		return -1;
+	}
+
 	cout << endl << "What interval should RNG's results satisfy? (i.e. define [A;B], where A and B are both integers, A < B)\n";
 	cout << "A = "; cin >> A;
 	cout << "B = "; cin >> B;
+
+	if (A >= B)
+	{
+		std::cerr << "A must be < B";
+		return -1;
+	}
 
 	int *a = new int[n];
 
 	CreateArray(a, n, A, B, 0);
 	PrintArray(a, n, 0);
-	ArithmeticMean(a, n, 0, z, 0);
+	ArithmeticMean(a, n, 0, z, 0, 0);
 
-	cout << "The arithmetic mean = " << setw(5) << z;
+	cout << "The arithmetic mean = " << z;
 
 	delete[] a;
 	return 0;
@@ -47,17 +60,10 @@ int main()
 
 void CreateArray(int *z, const int size, const int LeftLimit, const int RightLimit, const int i)
 {
-	if (i < size)
-	{
-		int t = LeftLimit + rand() % (RightLimit - LeftLimit + 1);
-		if (t % 2 == 0)
-		{
-			z[i] = t;
-			CreateArray(z, size, LeftLimit, RightLimit, i + 1);
-		}
-		else
-			CreateArray(z, size, LeftLimit, RightLimit, i);
-	}
+	z[i] = LeftLimit + rand() % (RightLimit - LeftLimit + 1);;
+	
+	if (i < size - 1)
+		CreateArray(z, size, LeftLimit, RightLimit, i + 1);
 }
 
 void PrintArray(int *z, const int size, const int i)
@@ -76,13 +82,13 @@ void PrintArray(int *z, const int size, const int i)
 		cout << " }\n";
 }
 
-void ArithmeticMean(int *z, const int size, double S, double &ArMean, const int i)
+void ArithmeticMean(int *z, const int size, double S, double &ArMean, const int i, const int n)
 {
-	S += z[i];
-	if (i < size - 1)
+	if (i < size)
 	{
-		ArithmeticMean(z, size, S, ArMean, i + 1);
+		S += z[i];
+		ArithmeticMean(z, size, S, ArMean, i + 2, n + 1);
 	}
 	else
-		ArMean = S / size;
+		ArMean = S / n;		
 }

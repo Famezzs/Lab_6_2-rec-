@@ -18,7 +18,7 @@ namespace UnitTest62rec
 			a[0] = 3;
 			double y;
 
-			ArithmeticMean(a, n, 0, y, 0);
+			ArithmeticMean(a, n, 0, y, 0, 0);
 			Assert::AreEqual(y, 3.);
 		}
 	};
